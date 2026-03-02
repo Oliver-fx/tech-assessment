@@ -1,5 +1,5 @@
 import http from 'http';
-import express from 'express';
+import express, {Request, Response} from 'express';
 import cors from 'cors';
 
 const app = express();
@@ -43,3 +43,8 @@ const HOST = process.env.HOST || '0.0.0.0';
 server.listen(Number(PORT), HOST, () => {
   console.log(`API server listening on http://${HOST}:${PORT}`);
 });
+
+app.get(`/${EMULATOR_URL}/sensors`, (req: Request, res: Request) => {
+  
+})
+
