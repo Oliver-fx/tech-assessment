@@ -10,8 +10,8 @@ interface fullData {
 
 export function MapData({sensorName, sensorUnit, sensorId, value}: fullData) {
     return (
-        <Card>
-            <CardHeader className="pb-0">
+        <Card className=" w_full text-center">
+            <CardHeader className="pb-0 text-xs">
                 <CardTitle>{sensorName}</CardTitle>
             </CardHeader>
             <CardContent>

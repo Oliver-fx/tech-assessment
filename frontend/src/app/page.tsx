@@ -75,7 +75,15 @@ export default function Page() {
     };
   }, []);
 
-  const speed = metaData.find(sensor => sensor.sensorName === "VEHICLE_SPEED")
+  const speed = metaData.find(sensor => sensor.sensorName === "VEHICLE_SPEED");
+  const tyre = metaData.filter(sensor => sensor.sensorName.includes("TYRE_PRESSURE"))
+  const pack_soc = metaData.find(snesor => snesor.sensorName === "PACK_SOC");
+  const temp = metaData.filter(sensor => sensor.sensorName.includes("TEMPERATURE"))
+  const pack_curr = metaData.find(snesor => snesor.sensorName === "PACK_CURRENT");
+  const pack_vol = metaData.find(snesor => snesor.sensorName === "PACK_VOLTAGE");
+  const steering_angle = metaData.find(snesor => snesor.sensorName === "STEERING_ANGLE");
+  const brake_press_f = metaData.find(snesor => snesor.sensorName === "BRAKE_PRESSURE_FRONT");
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border bg-background/80 px-6 py-4">
@@ -155,32 +163,105 @@ export default function Page() {
               
 
 
+              
+              {/* {metaData.map((sensor) => (
+                <MapData
+                  key={sensor.sensorId}
+                  sensorId={sensor.sensorId}
+                  sensorName={sensor.sensorName}
+                  sensorUnit={sensor.unit}
+                  value={livaData[sensor.sensorId]?.value.toFixed(1) ?? "--"}
+                />
+              ))} */}
+
+              <div className='grid grid-cols-2 gap-2 text-sm'>
+                {tyre?.map((sensor) => 
+                   <MapData
+                    key={sensor.sensorId}
+                    sensorId={sensor.sensorId}
+                    sensorName={sensor.sensorName}
+                    sensorUnit={sensor.unit}
+                    value={livaData[sensor.sensorId]?.value?.toFixed(1) ?? "--"}
+                  />
+                )
+    
+                }
+              </div>
+              
+              <div className='flex flex-col items-center gap-2 text-base'>
+                {pack_soc != undefined &&
+                  <MapData
+                    sensorName={pack_soc.sensorName}
+                    sensorId={pack_soc.sensorId}
+                    value={livaData[pack_soc.sensorId]?.value.toFixed(0) ?? "--"}
+                    sensorUnit={pack_soc.unit}
+                  />
+                }
+                {speed != undefined &&
+                  <MapData
+                    sensorName={speed.sensorName}
+                    sensorId={speed.sensorId}
+                    value={livaData[speed.sensorId]?.value.toFixed(0) ?? "--"}
+                    sensorUnit={speed.unit}
+                  />
                 
-                {metaData.map((sensor) => (
+                }
+
+                <div className='grid grid-cols-2 gap-2 text-sm w-full'>
+
+                  {steering_angle != undefined &&
+                    <MapData
+                      sensorName={steering_angle.sensorName}
+                      sensorId={steering_angle.sensorId}
+                      value={livaData[steering_angle.sensorId]?.value.toFixed(0) ?? "--"}
+                      sensorUnit={steering_angle.unit}
+                    />
+                  }
+                  {brake_press_f != undefined &&
+                    <MapData
+                      sensorName={brake_press_f.sensorName}
+                      sensorId={brake_press_f.sensorId}
+                      value={livaData[brake_press_f.sensorId]?.value.toFixed(0) ?? "--"}
+                      sensorUnit={brake_press_f.unit}
+                    />
+                  }
+                </div>
+                
+
+              </div>
+            
+
+              <div className='grid grid-cols-2 gap-2 text-sm'>
+                {temp?.map((sensor) => 
                   <MapData
                     key={sensor.sensorId}
                     sensorId={sensor.sensorId}
                     sensorName={sensor.sensorName}
                     sensorUnit={sensor.unit}
-                    value={livaData[sensor.sensorId]?.value.toFixed(1) ?? "--"}
+                    value={livaData[sensor.sensorId]?.value?.toFixed(1) ?? "--"}
                   />
-                ))}
-
-              
-
-
-              <div className='flex items-center'>
-                {speed != undefined &&
+                )}
+                {pack_curr != undefined &&
                   <MapData
-                    sensorName={speed.sensorName}
-                    sensorId={speed.sensorId}
-                    value={livaData[speed.sensorId]?.value ?? "--"}
-                    sensorUnit={speed.unit}
+                    sensorName={pack_curr.sensorName}
+                    sensorId={pack_curr.sensorId}
+                    value={livaData[pack_curr.sensorId]?.value.toFixed(0) ?? "--"}
+                    sensorUnit={pack_curr.unit}
                   />
-                
                 }
+                {pack_vol != undefined &&
+                  <MapData
+                    sensorName={pack_vol.sensorName}
+                    sensorId={pack_vol.sensorId}
+                    value={livaData[pack_vol.sensorId]?.value.toFixed(0) ?? "--"}
+                    sensorUnit={pack_vol.unit}
+                  />
+                }
+
+
               </div>
 
+              
 
                 
 
