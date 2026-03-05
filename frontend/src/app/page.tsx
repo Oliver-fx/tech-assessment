@@ -174,7 +174,7 @@ export default function Page() {
                   <MapData
                     sensorName={speed.sensorName}
                     sensorId={speed.sensorId}
-                    value={livaData[speed.sensorId].value}
+                    value={livaData[speed.sensorId]?.value ?? "--"}
                     sensorUnit={speed.unit}
                   />
                 
