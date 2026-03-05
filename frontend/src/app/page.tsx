@@ -75,7 +75,9 @@ export default function Page() {
     };
   }, []);
 
-  const speed = metaData.find(sensor => sensor.sensorName === "VEHICLE_SPEED")
+  const speed = metaData.find(sensor => sensor.sensorName === "VEHICLE_SPEED");
+  const tyre = metaData.filter(sensor => sensor.sensorName.includes("TYRE_PRESSURE"))
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border bg-background/80 px-6 py-4">
@@ -155,26 +157,38 @@ export default function Page() {
               
 
 
-                
-                {metaData.map((sensor) => (
-                  <MapData
+              
+              {/* {metaData.map((sensor) => (
+                <MapData
+                  key={sensor.sensorId}
+                  sensorId={sensor.sensorId}
+                  sensorName={sensor.sensorName}
+                  sensorUnit={sensor.unit}
+                  value={livaData[sensor.sensorId]?.value.toFixed(1) ?? "--"}
+                />
+              ))} */}
+
+              <div className='grid grid-cols-2 gap-2'>
+                {tyre?.map((sensor) => 
+                   <MapData
                     key={sensor.sensorId}
                     sensorId={sensor.sensorId}
                     sensorName={sensor.sensorName}
                     sensorUnit={sensor.unit}
-                    value={livaData[sensor.sensorId]?.value.toFixed(1) ?? "--"}
+                    value={livaData[sensor.sensorId]?.value?.toFixed(1) ?? "--"}
                   />
-                ))}
+                )
+    
+                }
+              </div>
 
-              
-
-
+            
               <div className='flex items-center'>
                 {speed != undefined &&
                   <MapData
                     sensorName={speed.sensorName}
                     sensorId={speed.sensorId}
-                    value={livaData[speed.sensorId].value}
+                    value={livaData[speed.sensorId]?.value.toFixed(0)}
                     sensorUnit={speed.unit}
                   />
                 
