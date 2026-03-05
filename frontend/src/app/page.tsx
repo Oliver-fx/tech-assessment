@@ -75,6 +75,7 @@ export default function Page() {
     };
   }, []);
 
+  const speed = metaData.find(sensor => sensor.sensorName === "VEHICLE_SPEED")
   return (
     <main className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border bg-background/80 px-6 py-4">
@@ -152,20 +153,34 @@ export default function Page() {
           <div className="overflow-x-auto rounded-xl border border-border bg-card">
             <div className="flex min-h-[120px] items-center justify-center p-6 text-center text-sm text-muted-foreground">
               
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
-                <div>
-                  
-                  {metaData.map((sensor) => (
-                    <MapData
-                      key={sensor.sensorId}
-                      sensorId={sensor.sensorId}
-                      sensorName={sensor.sensorName}
-                      sensorUnit={sensor.unit}
-                      value={livaData[sensor.sensorId]?.value.toFixed(1) ?? "--"}
-                    />
-                  ))}
-                </div>
+
+
+                
+                {metaData.map((sensor) => (
+                  <MapData
+                    key={sensor.sensorId}
+                    sensorId={sensor.sensorId}
+                    sensorName={sensor.sensorName}
+                    sensorUnit={sensor.unit}
+                    value={livaData[sensor.sensorId]?.value.toFixed(1) ?? "--"}
+                  />
+                ))}
+
+              
+
+
+              <div className='flex items-center'>
+                {speed != undefined &&
+                  <MapData
+                    sensorName={speed.sensorName}
+                    sensorId={speed.sensorId}
+                    value={livaData[speed.sensorId].value}
+                    sensorUnit={speed.unit}
+                  />
+                
+                }
               </div>
+
 
                 
 
