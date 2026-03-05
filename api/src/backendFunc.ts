@@ -1,15 +1,28 @@
-import { response } from 'express';
+import { Server } from 'http';
 import fetch from 'node-fetch'
-import { Interface } from 'readline'
+import { WebSocketServer } from 'ws';
 
-interface MetaData {
-    sensorId: string;
+
+export interface MetaData {
+    sensorId: number;
     sensorName: string;
     unit: string;
 }
 
-async function getData(emuUrl: string): Promise< MetaData | undefined > {
-    let metaData: MetaData;
+export interface LiveData {
+    sensorId: number;
+    value: number;
+    timestamp: number;
+}
+
+export interface CheckRange {
+    sensorId: number;
+    sensorName: string;
+    timestamp: number[];
+}
+
+async function fetchData(emuUrl: string): Promise< MetaData[] | undefined > {
+    let metaData: MetaData[];
     try {
         const response = await fetch(emuUrl + '/sensors');
 
@@ -17,10 +30,14 @@ async function getData(emuUrl: string): Promise< MetaData | undefined > {
             throw new Error("failed to fetch");
         } 
         
-        metaData = await response.json() as MetaData;
+        metaData = await response.json() as MetaData[];
 
         return metaData;
     } catch (error) {
-        console.log("ERROR in getData", error);
+        console.error("ERROR in getData", error);
     }
 }
+
+
+
+export { fetchData };

@@ -2,15 +2,33 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { fetchHealth, API_BASE_URL } from '../lib/api-client';
+import { fetchHealth, API_BASE_URL, TelemetryReading, fetchMetaData, SensorMetadata, getLiveData } from '../lib/api-client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { metadata } from './layout';
+import { Metadata } from 'next';
+import { MapData } from '../components/mapData';
 
 export default function Page() {
   // 'checking' → initial state; 'ok' or 'unhealthy' after first health check.
   const [healthStatus, setHealthStatus] = useState<'ok' | 'unhealthy' | 'checking'>('checking');
   const [healthError, setHealthError] = useState<string | null>(null);
+  const [metaData, setMetaData] = useState<SensorMetadata[]>([]);
+  // set data state
+  const [livaData, setLiveData] = useState<Record<number, TelemetryReading>>({});
 
   useEffect(() => {
+    // setup websocket client
+    // const ws = new WebSocket("ws://localhost:4000/livedata");
+
+    // ws.onmessage = (e) =>{
+    //   console.log(e.data);
+
+    //   const parsedData = JSON.parse(e.data);
+
+    //   setLiveData(parsedData);
+    // }
+
+
     let cancelled = false;
 
     async function checkHealth() {
@@ -36,7 +54,23 @@ export default function Page() {
       }
     })();
 
+
+    // get metadata
+    (async () => {
+      const metaData: SensorMetadata[] | undefined = await fetchMetaData();
+      setMetaData(metaData ?? []);
+
+    })();
+
+    
+    // streaming data
+    const ws = getLiveData(setLiveData);
+
     return () => {
+      if (ws.readyState == WebSocket.OPEN) {
+        ws.close();
+        console.log("websocket disconnecting....");
+      }
       cancelled = true;
     };
   }, []);
@@ -117,8 +151,24 @@ export default function Page() {
           <h2 className="text-sm font-semibold tracking-tight">All sensors</h2>
           <div className="overflow-x-auto rounded-xl border border-border bg-card">
             <div className="flex min-h-[120px] items-center justify-center p-6 text-center text-sm text-muted-foreground">
-              No sensor data yet. Add your metadata and telemetry API calls in <code className="rounded bg-muted px-1 py-0.5 text-xs">api-client.ts</code> and
-              use them in this page to populate the table.
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
+                <div>
+                  
+                  {metaData.map((sensor) => (
+                    <MapData
+                      key={sensor.sensorId}
+                      sensorId={sensor.sensorId}
+                      sensorName={sensor.sensorName}
+                      sensorUnit={sensor.unit}
+                      value={livaData[sensor.sensorId]?.value.toFixed(1) ?? "--"}
+                    />
+                  ))}
+                </div>
+              </div>
+
+                
+
             </div>
           </div>
         </section>

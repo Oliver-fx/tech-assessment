@@ -52,3 +52,39 @@ export async function fetchHealth(timeoutMs = 3000): Promise<HealthResponse> {
 // or whatever paths and response shapes you defined). Use the types above
 // or define new ones to match your API.
 // ---------------------------------------------------------------------------
+export async function fetchMetaData(timeoutMs = 3000): Promise<SensorMetadata[] | undefined> {
+  const url = `${API_BASE_URL}/metadata`;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { mode: 'cors', signal: controller.signal });
+    const metaData: SensorMetadata[] = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error("failed to fetch metadata");
+    }
+
+    return metaData;
+  } catch (error) {
+    console.error("error in fetching data");
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export function getLiveData(setLiveData:(prevData: any) => void): WebSocket {
+  const ws = new WebSocket("ws://localhost:4000/livedata");
+
+  ws.onmessage = (e) =>{
+    //console.log(e.data);
+    const parsedData: TelemetryReading = JSON.parse(e.data);
+
+    setLiveData((prevData: any) => ({...prevData, [parsedData.sensorId]: parsedData}));
+
+  }
+
+  ws.onerror = (error) => {
+    console.error("websocket error", error);
+  }
+
+  return ws;
+}
