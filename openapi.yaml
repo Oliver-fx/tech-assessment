@@ -13,6 +13,29 @@ paths:
       responses:
         '200':
           description: OK
+  /metadata:
+    get:
+      summary: Get metaData
+      description: get all sensors metadata, including sensorId, sensorName, and unit
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    sensorId:
+                      type: number
+                      example: 3000000060002
+                    sensorName:
+                      type: string
+                      example: BRAKE_PRESSURE_FRONT
+                    unit:
+                      type: string
+                      example: kPa
 servers:
   - url: http://localhost:4000
     description: Local development server

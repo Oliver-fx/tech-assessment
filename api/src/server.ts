@@ -85,6 +85,10 @@ let prevData: LiveData = {
   timestamp: -1
 };
 
+if (wsRecv.readyState === WebSocket.OPEN) {
+  console.log("websocket connected");
+}
+
 wsRecv.on("message", (data) => {
 
   liveData = JSON.parse(data.toString());

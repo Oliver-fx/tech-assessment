@@ -1,0 +1,28 @@
+asyncapi: 2.6.0
+info:
+  title: Streaming api
+  version: 1.0.0
+  description: Webstreaming data from all car sensors
+
+servers:
+  websocketServer:
+    url: ws://localhost:4000/livedata
+    protocol: ws
+
+channels:
+  livedata:
+    description: Stream all sensor data continuously
+    subscribe:
+      message:
+        payload:
+          type: object
+          properties:
+            sensorId:
+              type: integer
+              example: 3000000060002
+            value:
+              type: number
+              example: 200
+            timestamp:
+              type: number
+              example: 1772752146.433
