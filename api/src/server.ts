@@ -350,6 +350,10 @@ wsRecv.on("message", (data) => {
       });
     }
   })
+
+  wsRecv.on('close', () => {
+    console.log('websocket disconnected');
+  })
 })
 
 
